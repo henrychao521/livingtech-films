@@ -164,6 +164,8 @@ colorbalance=rs=0.04:bs=-0.05:rh=0.05:bh=-0.04,noise=alls=9:allf=t,vignette</pre
 </tbody></table>
 <h3>發佈上線（GitHub Pages）</h3>
 <p>全部成片（5 片 ＋ 快切 ＋ Onshape 3 支）以 <code>&lt;video&gt;</code> 嵌入 <code>storyboard.html</code> 的「看片」區，發佈到公開 repo <b>henrychao521/livingtech-films</b> → <b>henrychao521.github.io/livingtech-films/</b>，並接進主站導覽。</p>
+<h3>延伸：遮罩特效（MediaPipe 人像分割）</h3>
+<p>用 <b>MediaPipe Selfie Segmentation</b>（model_selection=1）對影片<b>逐幀</b>產生「人」遮罩（時間平滑降閃爍；工具 <code>work/segmask.py</code>），再以 ffmpeg <code>maskedmerge</code>／<code>alphamerge</code> 選擇性調色，輸出五種放上「看片」頁：主體聚光、人像模式（背景模糊）、選擇性彩色、背景抽換（漸層棚景）、主體光暈。同一套遮罩反過來也能做「比方塊更自然的去識別」。</p>
 <div class="callout warn"><b>第二批新踩雷</b>　⑩ 字卡用「・」(U+30FB) STHeiti 無此字形 → 顯示方塊，改用「·」(U+00B7)；英文 kicker 誤把中文放進 Futura(無 CJK) → 改純英文。　⑪ 多個 ffmpeg 同時跑 → CPU 互搶造成合成「假卡死」，改前景單跑即 ~20 秒完成。　⑫ 改公開站前本機 clone 已落後遠端多個提交 → 務必先 <code>git fetch</code>+同步再改再推。</div>
 </section>
 
