@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>生活科技教室・五片分鏡腳本</title>
+<style>
+:root{--bg:#0e1116;--bg2:#141922;--card:#171d28;--ink:#e8edf4;--mut:#9aa7b8;--line:#26303f;
+--ac:#2dd4bf;--am:#e9c46a;--rd:#e76f6f;--vi:#b794f6;--gd:#9ae6b4;
+--A:#c8b89a;--B:#e6c9a0;--C:#c9a36b;--D:#e3d44b;--E:#39d98a;}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.7;
+font-family:"PingFang TC","Noto Sans TC",system-ui,-apple-system,"Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+nav.top{position:sticky;top:0;z-index:30;background:rgba(14,17,22,.92);backdrop-filter:blur(8px);
+border-bottom:1px solid var(--line);display:flex;gap:4px;padding:10px 18px;flex-wrap:wrap;align-items:center}
+nav.top b{color:#fff;font-size:14px;letter-spacing:1px;margin-right:14px}
+nav.top a{color:var(--mut);text-decoration:none;font-size:13px;padding:5px 11px;border-radius:7px}
+nav.top a:hover{background:var(--bg2);color:#fff}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px 120px}
+header.hero{padding:64px 22px 34px;max-width:1080px;margin:0 auto}
+header.hero .kick{color:var(--ac);letter-spacing:5px;font-size:12px;font-weight:700}
+header.hero h1{font-size:40px;margin:12px 0 8px;letter-spacing:1px;line-height:1.2}
+header.hero p{color:var(--mut);font-size:16px;max-width:760px}
+.hmeta{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.hmeta span{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:5px 13px;font-size:12.5px;color:#bcc7d6}
+h2.sec{font-size:13px;letter-spacing:3px;color:var(--mut);text-transform:uppercase;margin:54px 0 16px;
+border-bottom:1px solid var(--line);padding-bottom:10px}
+/* overview grid */
+.ovgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:13px}
+.ovcard{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:16px;border-top:3px solid var(--ac)}
+.ovcard .lab{font-size:11px;letter-spacing:2px;color:var(--mut)}
+.ovcard h3{margin:5px 0 3px;font-size:19px}
+.ovcard .en{color:var(--mut);font-size:11.5px;letter-spacing:2px;text-transform:uppercase}
+.ovcard ul{list-style:none;padding:0;margin:11px 0 0;font-size:12.5px;color:#c3cdda}
+.ovcard li{padding:3px 0;border-top:1px dashed var(--line)}
+.ovcard li b{color:#fff;font-weight:600}
+.note{background:#10212a;border:1px solid #1c3b44;border-left:4px solid var(--ac);border-radius:9px;
+padding:13px 16px;font-size:13.5px;color:#bfe7e0;margin:14px 0}
+.note.warn{background:#221a12;border-color:#43331c;border-left-color:var(--am);color:#ead9b8}
+/* film */
+.film{background:var(--card);border:1px solid var(--line);border-radius:16px;margin:26px 0;overflow:hidden}
+.fhead{padding:22px 24px 18px;border-bottom:1px solid var(--line);position:relative}
+.fhead .no{position:absolute;right:22px;top:16px;font-size:60px;font-weight:800;color:var(--line);line-height:1}
+.fhead .gx{font-size:11.5px;letter-spacing:2px;font-weight:700;text-transform:uppercase}
+.fhead h3{font-size:30px;margin:6px 0 2px}
+.fhead .en{color:var(--mut);letter-spacing:3px;font-size:12px;text-transform:uppercase}
+.fhead .log{color:#cdd6e2;margin:12px 0 0;font-size:14.5px;max-width:760px}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
+.chip{font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:7px;padding:4px 10px;color:#c3cdda}
+.chip b{color:#fff}
+.sw{display:inline-block;width:13px;height:13px;border-radius:3px;vertical-align:-2px;margin-right:1px;border:1px solid rgba(255,255,255,.15)}
+/* timeline */
+.tl{padding:16px 24px 6px}
+.tl .cap{font-size:11px;letter-spacing:2px;color:var(--mut);text-transform:uppercase;margin-bottom:7px}
+.tlbar{display:flex;height:30px;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.tlbar div{display:flex;align-items:center;justify-content:center;font-size:10.5px;color:#0c1016;font-weight:700;
+border-right:1px solid rgba(0,0,0,.25);overflow:hidden;white-space:nowrap}
+.tlleg{font-size:11px;color:var(--mut);margin-top:7px}
+/* storyboard strip */
+.strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:13px;padding:18px 24px 24px}
+.panel{background:var(--bg2);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.panel .ph{position:relative;aspect-ratio:16/9;background:#0a0d12;overflow:hidden}
+.panel .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.panel .tc{position:absolute;left:7px;top:7px;background:rgba(0,0,0,.7);color:#fff;font-size:10.5px;
+padding:2px 7px;border-radius:5px;font-family:"SF Mono",Menlo,monospace;letter-spacing:1px}
+.panel .sh{position:absolute;right:7px;top:7px;background:var(--ac);color:#06201d;font-size:10.5px;
+padding:2px 7px;border-radius:5px;font-weight:800}
+.panel .bd{padding:10px 12px 12px}
+.panel .ac{font-size:13px;color:#e8edf4;margin:0 0 7px}
+.panel .tech{font-size:11px;color:var(--am);letter-spacing:.5px}
+.panel .cardtxt{margin-top:8px;font-size:11.5px;color:#9fb0c4;border-left:2px solid var(--line);padding-left:8px;font-style:italic}
+.ffoot{padding:4px 24px 22px;display:flex;gap:24px;flex-wrap:wrap;font-size:12.5px;color:var(--mut)}
+.ffoot b{color:#cdd6e2}
+footer{max-width:1080px;margin:40px auto 0;padding:24px 22px;border-top:1px solid var(--line);color:var(--mut);font-size:12.5px}
+footer b{color:#cdd6e2}
+@media(max-width:560px){header.hero h1{font-size:30px}.fhead .no{display:none}}
+</style>
+</head>
+<body>
+<nav class="top"><b>五片分鏡</b>
+<a href="#ov">總覽</a><a href="#tech">技術</a><a href="#watch">看片</a><a href="#A">A 縮時</a><a href="#C">C 懷舊</a><a href="#E">E 監視器</a><a href="#B">B 魏斯</a><a href="#D">D 偽紀錄</a>
+</nav>
+
+<header class="hero">
+  <div class="kick">LIVING-TECHNOLOGY CLASSROOM · FIVE FILMS</div>
+  <h1>一間生科教室，<br>五種電影語言</h1>
+  <p>同一批「固定機位、跨 8 天、整日連拍」的生活科技木作課素材，剪成五支風格完全不同的短片。本頁是視覺化分鏡腳本——每支附節奏軸、逐鏡縮圖、字卡文字與選鏡來源。</p>
+  <div class="hmeta"><span>🎞 8 拍攝日 · 72 段原始素材</span><span>🛠 ffmpeg 全自動剪輯</span><span>🙈 deface 未成年去識別</span><span>🎵 Kevin MacLeod · CC BY</span><span>📅 2026-06-21</span></div>
+</header>
+
+<div class="wrap">
+
+<h2 class="sec" id="ov">總覽 · 五片如何各自不同</h2>
+<div class="note">前作四支已用過：水族館 vlog、水庫工程紀錄片、生科老師期末週（生活流）、一週年晚餐（電影級蒙太奇）。下面五支<b>刻意全部跳出</b>那四種語言，橫跨 2005–2023 的實驗、文藝、科幻、作者喜劇與電視喜劇。</div>
+<div class="ovgrid">
+  <div class="ovcard" style="border-top-color:var(--A)">
+    <div class="lab">FILM A</div><h3>縮時交響曲</h3><div class="en">A Term in One Frame</div>
+    <ul><li><b>類型</b>非敘事縮時 / 城市交響曲</li><li><b>參考</b>Koyaanisqatsi · Samsara (2011)</li><li><b>長度</b>0:56</li><li><b>配樂</b>Long Note Two</li><li><b>臉孔</b>高速＋tmix 殘影＋deface，最省工</li><li><b>狀態</b>✅ 已完成</li></ul>
+  </div>
+  <div class="ovcard" style="border-top-color:var(--C)">
+    <div class="lab">FILM C</div><h3>文藝懷舊</h3><div class="en">The Things We Made</div>
+    <ul><li><b>類型</b>A24 成長記憶</li><li><b>參考</b>Aftersun (2022) · Petite Maman</li><li><b>長度</b>~0:45</li><li><b>配樂</b>Beauty Flow</li><li><b>臉孔</b>逆光剪影/背影/細節＋deface</li><li><b>狀態</b>✅ 已完成 0:35</li></ul>
+  </div>
+  <div class="ovcard" style="border-top-color:var(--E)">
+    <div class="lab">FILM E</div><h3>監視器科幻</h3><div class="en">Subject 4471</div>
+    <ul><li><b>類型</b>監視器美學 clinical 科幻</li><li><b>參考</b>Severance (2022) · POI (2011)</li><li><b>長度</b>~0:55</li><li><b>配樂</b>Echoes of Time v2</li><li><b>臉孔</b>模糊＝「遮蔽」風格本身</li><li><b>狀態</b>✅ 已完成 0:32</li></ul>
+  </div>
+  <div class="ovcard" style="border-top-color:var(--B)">
+    <div class="lab">FILM B</div><h3>魏斯安德森</h3><div class="en">The Lin-Hai Institute</div>
+    <ul><li><b>類型</b>對稱章節 deadpan</li><li><b>參考</b>Grand Budapest (2014) · Asteroid City</li><li><b>長度</b>~0:50</li><li><b>配樂</b>Fig Leaf Times Two</li><li><b>臉孔</b>遠景置中＋物件特寫＋deface</li><li><b>狀態</b>✅ 已完成 0:42</li></ul>
+  </div>
+  <div class="ovcard" style="border-top-color:var(--D)">
+    <div class="lab">FILM D</div><h3>偽紀錄喜劇</h3><div class="en">Tech Lab: The Mockumentary</div>
+    <ul><li><b>類型</b>單機偽紀錄校園喜劇</li><li><b>參考</b>The Office (2005) · Abbott Elementary (2021)</li><li><b>長度</b>~0:50</li><li><b>配樂</b>Wallpaper</li><li><b>臉孔</b>模糊＋喜劇字幕（最費工）</li><li><b>狀態</b>✅ 已完成 0:32</li></ul>
+  </div>
+</div>
+
+<style>
+.techflow{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch;margin:14px 0}
+.techflow .ts{background:var(--bg2);border:1px solid var(--line);border-radius:9px;padding:8px 12px;font-size:13px;color:#dbe3ee;display:flex;flex-direction:column;gap:1px}
+.techflow .ts small{color:var(--mut);font-size:10.5px}
+.techflow .ar{color:var(--ac);align-self:center;font-weight:700;padding:0 1px}
+.techgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:12px;margin:12px 0}
+.tcard{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:14px 15px;border-left:3px solid var(--ac)}
+.tcard b{color:#fff}.tcard .d{color:#aab6c6;font-size:12.5px;margin-top:4px;line-height:1.6}
+.tcard code,.trec code{background:#0d1620;color:#7fd6c9;padding:1px 5px;border-radius:4px;font-size:11.5px}
+.trec{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+.trec th,.trec td{border:1px solid var(--line);padding:7px 11px;text-align:left;vertical-align:top}
+.trec th{background:#16323a;color:#cdeee8}.trec tbody tr:nth-child(even){background:#10151d}
+.mlink{display:inline-block;margin:8px 0 4px;background:var(--ac);color:#06201d;font-weight:700;font-size:13px;padding:8px 15px;border-radius:8px;text-decoration:none}
+.h3t{font-size:15px;margin:22px 0 2px;color:#e8edf4;border-left:3px solid var(--am);padding-left:10px}
+</style>
+<h2 class="sec" id="tech">技術說明 · HOW THESE WERE MADE</h2>
+<div class="note">五支片<b>完全以 ffmpeg 指令自動化剪輯</b>（非手動拖時間軸）：風格＝濾鏡配方、匿名＝deface、字卡＝Python 產圖、串接＝xfade。全程可重現、可逐支抽格驗證。</div>
+
+<div class="h3t">製作流程</div>
+<div class="techflow">
+  <span class="ts">① 選鏡<small>接觸表編目</small></span><span class="ar">→</span>
+  <span class="ts">② 風格濾鏡<small>調色/縮時/掃描線</small></span><span class="ar">→</span>
+  <span class="ts">③ 去識別<small>deface 模糊人臉</small></span><span class="ar">→</span>
+  <span class="ts">④ 串接<small>xfade 交叉淡接</small></span><span class="ar">→</span>
+  <span class="ts">⑤ 字卡<small>PIL 產圖→overlay</small></span><span class="ar">→</span>
+  <span class="ts">⑥ 配樂<small>afade 淡入淡出</small></span><span class="ar">→</span>
+  <span class="ts">⑦ 抽格驗證<small>逐支看過</small></span>
+</div>
+
+<div class="h3t">工具箱</div>
+<div class="techgrid">
+  <div class="tcard"><b>ffmpeg</b><div class="d">剪接、濾鏡調色、縮時、疊圖、音訊合成一條龍；全自動、可重現。</div></div>
+  <div class="tcard"><b>deface 1.5.0</b><div class="d">偵測人臉並模糊，未成年去識別（<code>--thresh 0.2</code>）。Palmier 本身無此能力。</div></div>
+  <div class="tcard"><b>Python PIL · mktext.py</b><div class="d">文字渲染成透明 PNG 再 <code>overlay</code>——因這台 ffmpeg 未編入 <code>drawtext</code>；字型、字距、描邊全可控。</div></div>
+  <div class="tcard"><b>xconcat.py</b><div class="d">以 <code>xfade</code> 串接多段並強制正規化 1920×1080（deface 會把畫面墊高到 1088）。</div></div>
+</div>
+
+<div class="h3t">五種風格 ＝ 五種濾鏡配方</div>
+<table class="trec"><thead><tr><th>片</th><th>核心做法</th></tr></thead><tbody>
+<tr><td><b>A 縮時</b></td><td><code>setpts=PTS/N</code> 抽幀縮時 ＋ <code>tmix</code> 多幀平均殘影 ＋ 暈影</td></tr>
+<tr><td><b>C 懷舊</b></td><td>褪色 <code>curves</code>（提黑）＋ 低飽和 ＋ 暖陰影/冷高光 ＋ <code>noise</code> 顆粒 ＋ 慢推</td></tr>
+<tr><td><b>E 監視器</b></td><td>冷調 ＋ 重暈影 ＋ 掃描線疊圖 ＋ 綠色 HUD／時間碼 ＋ deface 模糊＝遮蔽</td></tr>
+<tr><td><b>B 魏斯</b></td><td>置中裁切（對稱）＋ 粉彩（提亮、低對比）＋ 粉彩章節卡 ＋ 硬切</td></tr>
+<tr><td><b>D 偽紀錄</b></td><td>自然調 ＋ 局部 <code>zoompan</code> 推近 ＋ deface ＋ 下三分標喜劇字幕 ＋ 假 UI</td></tr>
+</tbody></table>
+
+<div class="note warn"><b>未成年保護</b>　所有出現可辨識學生臉孔的鏡頭都跑 deface；A 縮時另用 tmix 殘影；其餘以剪影／背影／物件／空景選鏡迴避。每支抽靜格驗證「暫停也認不出個人」。</div>
+
+<a class="mlink" href="making-of.html">完整實作脈絡與 9 個除錯紀錄 →</a>
+
+<style>
+.vwrap{margin:14px 0 6px}
+.vfeature video{width:100%;border-radius:12px;border:1px solid var(--line);background:#000;display:block}
+.vmeta{font-size:12.5px;color:#c3cdda;margin:7px 2px 0}.vmeta b{color:#fff}
+.watch{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:16px}
+.vcard{background:var(--card);border:1px solid var(--line);border-radius:11px;overflow:hidden}
+.vcard video{width:100%;display:block;background:#000;aspect-ratio:16/9}
+.vcard .vmeta{padding:9px 12px 11px;margin:0}
+</style>
+<h2 class="sec" id="watch">▶ 看片 · WATCH（成片已嵌入，可直接播放）</h2>
+<div class="note">下面是<b>實際可播放的成片</b>（皆已風格化＋未成年去識別）。快切混剪為置頂主打，其下為五支完整短片。點播放鍵即可觀看。</div>
+<div class="vwrap vfeature">
+  <video controls preload="metadata" poster="site/img/sb/sz.jpg" src="renders/影片SZ_快切混剪.mp4"></video>
+  <div class="vmeta"><b>★ 快切混剪</b> · 0:51 · 跨五種風格高速硬切（119 刀）· 配樂 Electrodoodle — Kevin MacLeod (CC BY)</div>
+</div>
+<div class="watch">
+  <div class="vcard"><video controls preload="metadata" poster="site/img/sb/a1.jpg" src="renders/影片A_縮時交響曲.mp4"></video><div class="vmeta"><b>A</b> 縮時交響曲 · 0:56 · Long Note Two</div></div>
+  <div class="vcard"><video controls preload="metadata" poster="site/img/sb/b1.jpg" src="renders/影片B_魏斯安德森.mp4"></video><div class="vmeta"><b>B</b> 林海工藝研究所 · 0:42 · Fig Leaf Times Two</div></div>
+  <div class="vcard"><video controls preload="metadata" poster="site/img/sb/c1.jpg" src="renders/影片C_文藝懷舊.mp4"></video><div class="vmeta"><b>C</b> 那年秋天 · 0:35 · Beauty Flow</div></div>
+  <div class="vcard"><video controls preload="metadata" poster="site/img/sb/d1.jpg" src="renders/影片D_偽紀錄喜劇.mp4"></video><div class="vmeta"><b>D</b> 生科教室觀察日記 · 0:32 · Wallpaper</div></div>
+  <div class="vcard"><video controls preload="metadata" poster="site/img/sb/e1.jpg" src="renders/影片E_監視器科幻.mp4"></video><div class="vmeta"><b>E</b> 受試者編號 4471 · 0:32 · Echoes of Time v2</div></div>
+</div>
+
+<!-- ============ FILM A ============ -->
+<h2 class="sec" id="A">A · 縮時交響曲</h2>
+<div class="film">
+  <div class="fhead">
+    <div class="no">A</div>
+    <div class="gx" style="color:var(--A)">非敘事縮時 · 城市交響曲</div>
+    <h3>一格之內，一個學期</h3>
+    <div class="en">A Term in One Frame</div>
+    <p class="log">固定機位是唯一主角。把六天、數十節課壓進同一個畫框——空教室→學生湧入→低頭製圖→機具節拍→木框繁殖→人潮退去→疊椅熄燈→隔天窗光再亮。投影幕上的倒數鐘是反覆的時間印記。</p>
+    <div class="chips"><span class="chip"><b>長度</b> 0:56</span><span class="chip"><b>配樂</b> Long Note Two</span><span class="chip"><b>參考</b> Koyaanisqatsi · Samsara</span>
+    <span class="chip"><b>色調</b><span class="sw" style="background:#2a2f36"></span><span class="sw" style="background:#6b7280"></span><span class="sw" style="background:#c8b89a"></span><span class="sw" style="background:#e8dcc8"></span></span></div>
+  </div>
+  <div class="tl"><div class="cap">節奏軸 · Pacing</div>
+    <div class="tlbar">
+      <div style="flex:6;background:#3a4250">空景開場 6s</div>
+      <div style="flex:8;background:#7d6f9e">人流湧入 8s</div>
+      <div style="flex:10;background:#5a8a86">製圖 10s</div>
+      <div style="flex:6;background:#5a8a86">工作桌 6s</div>
+      <div style="flex:6;background:#7d6f9e">講授 6s</div>
+      <div style="flex:6;background:#7d6f9e">回流 6s</div>
+      <div style="flex:10;background:#3a4250">清空＋時鐘 10s</div>
+      <div style="flex:8;background:#c8b89a;color:#1a1a1a">終景 8s</div>
+    </div>
+    <div class="tlleg">■ 空景　■ 人流（紫＝tmix 殘影匿名）　■ 工作　0.5s 交叉淡接</div>
+  </div>
+  <div class="strip">
+    <div class="panel"><div class="ph"><img src="site/img/sb/a1.jpg" alt="空景開場"><span class="tc">00:01</span><span class="sh">A1</span></div><div class="bd"><p class="ac">晨光中的空教室，疊椅靜立，緩慢推近。</p><p class="tech">8× 縮時 · zoom-in · 暈影</p><p class="cardtxt">場記卡：生活科技教室｜木作單元</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/a2.jpg" alt="人流湧入"><span class="tc">00:07</span><span class="sh">A2</span></div><div class="bd"><p class="ac">學生湧入，化為流動的光影殘像。</p><p class="tech">40× + tmix=8 殘影（＝匿名）</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/a3.jpg" alt="製圖"><span class="tc">00:15</span><span class="sh">A3</span></div><div class="bd"><p class="ac">低頭製圖的一整節，鉛筆與橡皮屑。</p><p class="tech">30× 縮時 · deface＋tmix</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/a4.jpg" alt="工作桌"><span class="tc">00:25</span><span class="sh">A4</span></div><div class="bd"><p class="ac">工作桌邊的動手實作，木料來回。</p><p class="tech">40× 縮時</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/a5.jpg" alt="講授"><span class="tc">00:31</span><span class="sh">A5</span></div><div class="bd"><p class="ac">全班面向前方，投影片講解工法。</p><p class="tech">40× 縮時</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/a6.jpg" alt="回流"><span class="tc">00:37</span><span class="sh">A6</span></div><div class="bd"><p class="ac">下一節人潮再度回流座位。</p><p class="tech">40× 縮時</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/a7.jpg" alt="清空與時鐘"><span class="tc">00:43</span><span class="sh">A7</span></div><div class="bd"><p class="ac">人去樓空，投影幕倒數鐘飛轉。</p><p class="tech">60× 縮時 · 時間印記</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/a8.jpg" alt="終景"><span class="tc">00:49</span><span class="sh">A8</span></div><div class="bd"><p class="ac">回到空景，但桌上多了完成的木作。</p><p class="tech">9× 縮時 · 片尾標題淡入</p><p class="cardtxt">標題：一格之內，一個學期</p></div></div>
+  </div>
+  <div class="ffoot"><div><b>鏡頭來源</b>　1005·0922·1004·0923·0929·0928·0927（空↔滿循環）</div><div><b>臉孔處理</b>　高速縮時＋tmix=8 殘影＋deface 三重，靜格驗證無可辨識個人</div></div>
+</div>
+
+<!-- ============ FILM C ============ -->
+<h2 class="sec" id="C">C · 文藝懷舊</h2>
+<div class="film">
+  <div class="fhead">
+    <div class="no">C</div>
+    <div class="gx" style="color:var(--C)">A24 文藝 · 成長記憶</div>
+    <h3>那年秋天，我們做了一個東西</h3>
+    <div class="en">The Things We Made</div>
+    <p class="log">把素材當成多年後回望的記憶——顆粒、褪色、逆光剪影、稀疏鋼琴。不解說「在上什麼課」，只捕捉專注、木屑、口罩上方的眼神與午後塵光。</p>
+    <div class="chips"><span class="chip"><b>長度</b> ~0:45</span><span class="chip"><b>配樂</b> Beauty Flow</span><span class="chip"><b>參考</b> Aftersun · Petite Maman</span>
+    <span class="chip"><b>色調</b><span class="sw" style="background:#2b3a3a"></span><span class="sw" style="background:#6f8a86"></span><span class="sw" style="background:#c9a36b"></span><span class="sw" style="background:#e8e0d2"></span></span></div>
+  </div>
+  <div class="tl"><div class="cap">節奏軸 · Pacing</div>
+    <div class="tlbar">
+      <div style="flex:6;background:#3b4a4a">晨光 6s</div>
+      <div style="flex:5;background:#26343a">剪影 5s</div>
+      <div style="flex:4;background:#8a6a3a;color:#1a1a1a">鉛筆 4s</div>
+      <div style="flex:4;background:#8a6a3a;color:#1a1a1a">木紋 4s</div>
+      <div style="flex:4;background:#26343a">背影 4s</div>
+      <div style="flex:6;background:#3b4a4a">塵光 6s</div>
+      <div style="flex:4;background:#26343a">獨身 4s</div>
+      <div style="flex:6;background:#c9a36b;color:#1a1a1a">成品＋詩 6s</div>
+    </div>
+    <div class="tlleg">■ 空景塵光　■ 剪影/背影　■ 細節特寫　全程顆粒＋褪色＋暈影</div>
+  </div>
+  <div class="strip">
+    <div class="panel"><div class="ph"><img src="site/img/sb/c1.jpg" alt="晨光"><span class="tc">00:00</span><span class="sh">C1</span></div><div class="bd"><p class="ac">晨光中的空教室，極慢推近。</p><p class="tech">褪色 LUT · 顆粒 · 慢推</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/c2.jpg" alt="剪影"><span class="tc">00:06</span><span class="sh">C2</span></div><div class="bd"><p class="ac">逆光窗邊，伏案製圖的剪影。</p><p class="tech">壓暗剪影＋deface（雙重去識別）</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/c3.jpg" alt="鉛筆"><span class="tc">00:11</span><span class="sh">C3</span></div><div class="bd"><p class="ac">鉛筆在學習單上慢慢移動。</p><p class="tech">中央裁切細節 · 手部</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/c4.jpg" alt="木紋"><span class="tc">00:15</span><span class="sh">C4</span></div><div class="bd"><p class="ac">木框、膠帶與角鐵的紋理。</p><p class="tech">物件特寫 · 無人</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/c5.jpg" alt="背影"><span class="tc">00:19</span><span class="sh">C5</span></div><div class="bd"><p class="ac">一排低頭的背影，安靜。</p><p class="tech">背向鏡頭＋deface</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/c6.jpg" alt="塵光"><span class="tc">00:23</span><span class="sh">C6</span></div><div class="bd"><p class="ac">空教室強逆光，椅腳間的塵光。</p><p class="tech">過曝霧感 · 慢推</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/c7.jpg" alt="獨身"><span class="tc">00:29</span><span class="sh">C7</span></div><div class="bd"><p class="ac">一個身影獨自停在教室前方。</p><p class="tech">壓暗剪影＋deface</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/c8.jpg" alt="成品"><span class="tc">00:33</span><span class="sh">C8</span></div><div class="bd"><p class="ac">工作桌上一件完成的木作，緩緩淡出。</p><p class="tech">慢推＋詩句字幕＋標題</p><p class="cardtxt">字幕：有些東西，是用一個秋天慢慢長出來的。</p></div></div>
+  </div>
+  <div class="ffoot"><div><b>鏡頭來源</b>　1005·1004·0929·0928（偏空景/細節/逆光）</div><div><b>臉孔處理</b>　選鏡即避臉（剪影/背影/物件）＋人物段一律 deface</div></div>
+</div>
+
+<!-- ============ FILM E ============ -->
+<h2 class="sec" id="E">E · 監視器科幻</h2>
+<div class="film">
+  <div class="fhead">
+    <div class="no">E</div>
+    <div class="gx" style="color:var(--E)">監視器美學 · clinical 科幻</div>
+    <h3>受試者編號 4471</h3>
+    <div class="en">Subject 4471</div>
+    <p class="log">把固定廣角當成「某個系統的監視畫面」，冷色調＋時間碼＋資料疊層，以一個 AI 的口吻觀察一群「受試者」如何學會「製造物件 #4471（木框）」。臉上的模糊遮蔽＝把『未成年去識別』直接變成風格語言。</p>
+    <div class="chips"><span class="chip"><b>長度</b> ~0:55</span><span class="chip"><b>配樂</b> Echoes of Time v2</span><span class="chip"><b>參考</b> Severance · Person of Interest</span>
+    <span class="chip"><b>色調</b><span class="sw" style="background:#0a1420"></span><span class="sw" style="background:#16384a"></span><span class="sw" style="background:#39d98a"></span><span class="sw" style="background:#ebc63c"></span></span></div>
+  </div>
+  <div class="tl"><div class="cap">節奏軸 · Pacing</div>
+    <div class="tlbar">
+      <div style="flex:5;background:#0f2630">開機 5s</div>
+      <div style="flex:6;background:#16384a">廣角監看 6s</div>
+      <div style="flex:4;background:#1d4a4a">ENHANCE 4s</div>
+      <div style="flex:5;background:#5a4a16;color:#1a1a1a">異常 5s</div>
+      <div style="flex:5;background:#16384a">時間加速 5s</div>
+      <div style="flex:5;background:#1d4a4a">物件達成 5s</div>
+      <div style="flex:4;background:#0a0f14">訊號中斷 4s</div>
+    </div>
+    <div class="tlleg">■ 冷藍監看　■ 綠 HUD 資料層　■ 琥珀異常警示　全程掃描線＋時間碼</div>
+  </div>
+  <div class="strip">
+    <div class="panel"><div class="ph"><img src="site/img/sb/e1.jpg" alt="開機"><span class="tc">00:00</span><span class="sh">E1</span></div><div class="bd"><p class="ac">系統開機，掃描線掠過空置設施。</p><p class="tech">冷調＋掃描線＋開機字串</p><p class="cardtxt">SUBJECTS: 28 · TASK: FABRICATE 4471</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/e2.jpg" alt="廣角監看"><span class="tc">00:05</span><span class="sh">E2</span></div><div class="bd"><p class="ac">廣角監看：受試者就位，重複以石墨於纖維上做記號。</p><p class="tech">deface 模糊＝遮蔽＋資料層</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/e3.jpg" alt="ENHANCE"><span class="tc">00:11</span><span class="sh">E3</span></div><div class="bd"><p class="ac">放大某受試者的工作區。</p><p class="tech">裁切推近＋「ENHANCE」框</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/e4.jpg" alt="異常"><span class="tc">00:15</span><span class="sh">E4</span></div><div class="bd"><p class="ac">偵測到受試者偏離流程（起身/走動）。</p><p class="tech">琥珀警示閃爍＋抖動</p><p class="cardtxt">◈ ANOMALY DETECTED</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/e5.jpg" alt="時間加速"><span class="tc">00:20</span><span class="sh">E5</span></div><div class="bd"><p class="ac">系統快轉觀察，時間碼飛旋。</p><p class="tech">縮時＋滾動時間碼 HUD</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/e6.jpg" alt="物件達成"><span class="tc">00:25</span><span class="sh">E6</span></div><div class="bd"><p class="ac">物件 #4471 成形，列陣於檯面。</p><p class="tech">物件特寫＋狀態字串</p><p class="cardtxt">OBJECT #4471 — STATUS: COMPLETE</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/e7.jpg" alt="訊號中斷"><span class="tc">00:30</span><span class="sh">E7</span></div><div class="bd"><p class="ac">燈滅，畫面轉為雜訊。</p><p class="tech">訊號中斷＋雜訊＋標題</p><p class="cardtxt">標題：受試者編號 4471</p></div></div>
+  </div>
+  <div class="ffoot"><div><b>鏡頭來源</b>　0927·0922·1004·1020·0928（廣角＋物件）</div><div><b>臉孔處理</b>　deface 模糊本身即美學；移動人物逐段確認</div></div>
+</div>
+
+<!-- ============ FILM B ============ -->
+<h2 class="sec" id="B">B · 魏斯安德森</h2>
+<div class="film">
+  <div class="fhead">
+    <div class="no">B</div>
+    <div class="gx" style="color:var(--B)">對稱章節 · deadpan</div>
+    <h3>林海工藝研究所</h3>
+    <div class="en">The Lin-Hai Institute of Craft</div>
+    <p class="log">把這間教室當成一間古怪的「工藝研究所」，置中對稱、粉彩調色、章節分段，用一本正經的字卡介紹每件器物與每道工序。</p>
+    <div class="chips"><span class="chip"><b>長度</b> ~0:50</span><span class="chip"><b>配樂</b> Fig Leaf Times Two</span><span class="chip"><b>參考</b> Grand Budapest · Asteroid City</span>
+    <span class="chip"><b>色調</b><span class="sw" style="background:#f4e7d0"></span><span class="sw" style="background:#e6c9a0"></span><span class="sw" style="background:#c98f5a"></span><span class="sw" style="background:#6e4a34"></span></span></div>
+  </div>
+  <div class="tl"><div class="cap">節奏軸 · Pacing</div>
+    <div class="tlbar">
+      <div style="flex:4;background:#6e4a34">標題卡 4s</div>
+      <div style="flex:8;background:#e6c9a0;color:#1a1a1a">第一章·一條線 8s</div>
+      <div style="flex:8;background:#d8b48a;color:#1a1a1a">第二章·機器們 8s</div>
+      <div style="flex:7;background:#e6c9a0;color:#1a1a1a">第三章·小塔 7s</div>
+      <div style="flex:7;background:#d8b48a;color:#1a1a1a">第四章·靜止 7s</div>
+    </div>
+    <div class="tlleg">■ 章節卡　■ 置中對稱 tableau　粉彩調色 · Futura 字卡 · 硬切</div>
+  </div>
+  <div class="strip">
+    <div class="panel"><div class="ph"><img src="site/img/sb/b1.jpg" alt="第一章"><span class="tc">00:04</span><span class="sh">B1</span></div><div class="bd"><p class="ac">第一章：置中的製圖桌，鉛筆與三角板。</p><p class="tech">置中裁切＋粉彩＋deface</p><p class="cardtxt">字卡：第一章 · 一條線 / THE LINE</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/b2.jpg" alt="第二章"><span class="tc">00:12</span><span class="sh">B2</span></div><div class="bd"><p class="ac">第二章：機器們的對稱巡禮，逐一掛名。</p><p class="tech">置中 · 物件 · 標籤</p><p class="cardtxt">標籤：THE DRILL PRESS, 2021</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/b3.jpg" alt="第三章"><span class="tc">00:20</span><span class="sh">B3</span></div><div class="bd"><p class="ac">第三章：四十座木框小塔，博物館式陳列。</p><p class="tech">置中對稱 · 物件</p><p class="cardtxt">字卡：第三章 · 四十座小塔</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/b4.jpg" alt="第四章"><span class="tc">00:27</span><span class="sh">B4</span></div><div class="bd"><p class="ac">第四章：全班置中定格 deadpan，鐘響之前。</p><p class="tech">置中＋deface＋粉彩</p><p class="cardtxt">字卡：第四章 · 鐘響之前</p></div></div>
+  </div>
+  <div class="ffoot"><div><b>鏡頭來源</b>　1004·0927·0929（置中裁切）</div><div><b>臉孔處理</b>　偏遠景與物件章節；人物章節 deface</div></div>
+</div>
+
+<!-- ============ FILM D ============ -->
+<h2 class="sec" id="D">D · 偽紀錄喜劇</h2>
+<div class="film">
+  <div class="fhead">
+    <div class="no">D</div>
+    <div class="gx" style="color:var(--D)">單機偽紀錄 · 校園喜劇</div>
+    <h3>生科教室觀察日記</h3>
+    <div class="en">Tech Lab: The Mockumentary</div>
+    <p class="log">假裝有攝影團隊長駐這間教室，用 deadpan 字幕、突然推近（Office zoom）、冷開場與假字卡，把日常的小荒謬變成情境喜劇。</p>
+    <div class="chips"><span class="chip"><b>長度</b> ~0:50</span><span class="chip"><b>配樂</b> Wallpaper</span><span class="chip"><b>參考</b> The Office · Abbott Elementary</span>
+    <span class="chip"><b>色調</b><span class="sw" style="background:#1f2430"></span><span class="sw" style="background:#4a5568"></span><span class="sw" style="background:#e3d44b"></span><span class="sw" style="background:#ffffff"></span></span></div>
+  </div>
+  <div class="tl"><div class="cap">節奏軸 · Pacing</div>
+    <div class="tlbar">
+      <div style="flex:6;background:#2a3142">冷開場·倒數 6s</div>
+      <div style="flex:6;background:#4a5568">設計圖之亂 6s</div>
+      <div style="flex:5;background:#3a4150">機器擬人 5s</div>
+      <div style="flex:5;background:#4a5568">老師的耐心 5s</div>
+      <div style="flex:5;background:#e3d44b;color:#1a1a1a">無聲擊掌 5s</div>
+    </div>
+    <div class="tlleg">■ 冷開場　■ 段落　■ 高潮　突推近 + 下三分標字幕 + 假 UI</div>
+  </div>
+  <div class="strip">
+    <div class="panel"><div class="ph"><img src="site/img/sb/d1.jpg" alt="冷開場"><span class="tc">00:00</span><span class="sh">D1</span></div><div class="bd"><p class="ac">倒數鐘剩 10 秒，全班無動於衷 → 鐘響瞬間騷動。</p><p class="tech">冷開場＋標題卡＋deface</p><p class="cardtxt">標題卡：生科教室 · 第三節</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/d2.jpg" alt="設計圖之亂"><span class="tc">00:06</span><span class="sh">D2</span></div><div class="bd"><p class="ac">一個學生畫了又擦、擦了又畫。</p><p class="tech">突然推近（zoom punch）＋字幕</p><p class="cardtxt">字幕：學生 #7 — 正在與一條直線搏鬥</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/d3.jpg" alt="機器擬人"><span class="tc">00:12</span><span class="sh">D3</span></div><div class="bd"><p class="ac">鑽床特寫，字幕替它配內心戲。</p><p class="tech">物件特寫＋擬人字幕</p><p class="cardtxt">字幕：鑽床，入行 30 年，沒被開過機</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/d4.jpg" alt="老師的耐心"><span class="tc">00:17</span><span class="sh">D4</span></div><div class="bd"><p class="ac">老師在前方講解，假 UI 顯示耐心值下降。</p><p class="tech">假 UI 進度條＋字幕</p><p class="cardtxt">UI：老師耐心值 ▓▓▓░░ 58%</p></div></div>
+    <div class="panel"><div class="ph"><img src="site/img/sb/d5.jpg" alt="無聲擊掌"><span class="tc">00:22</span><span class="sh">D5</span></div><div class="bd"><p class="ac">木框終於立起，全班（模糊）無聲擊掌。</p><p class="tech">deface＋字幕＋收尾卡</p><p class="cardtxt">字幕：那天，沒有人記得是誰先鼓掌的</p></div></div>
+  </div>
+  <div class="ffoot"><div><b>鏡頭來源</b>　0928·1004·0927·0929·1020</div><div><b>臉孔處理</b>　全學生 deface 模糊＋喜劇字幕（模糊本身成為梗）</div></div>
+</div>
+
+</div>
+
+<footer>
+  <p><b>工具</b>　ffmpeg（剪輯/濾鏡/縮時/疊圖）· deface 1.5.0（未成年去識別）· Python PIL（字卡）· 全程自動化、可重現。</p>
+  <p><b>音樂</b>　皆為 Kevin MacLeod（incompetech.com）CC BY 4.0：Long Note Two · Beauty Flow · Echoes of Time v2 · Fig Leaf Times Two · Wallpaper。成片片尾均已標註。</p>
+  <p><b>未成年保護</b>　所有出現可辨識學生臉孔的鏡頭均經 deface 處理，或以剪影/背影/高速殘影/模糊遮蔽避免辨識。</p>
+  <p style="color:#5f6e82;margin-top:10px">生活科技教室・五片分鏡腳本　·　固定機位素材　·　2026-06-21　·　由 Claude 自動剪輯</p>
+</footer>
+</body>
+</html>

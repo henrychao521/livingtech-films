@@ -1,0 +1,12 @@
+# 中間檔與原始素材，不發佈
+work/
+sheets/
+frames/
+music/
+.claude/
+# 系統雜物
+*.log
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
