@@ -59,7 +59,8 @@ footer{color:var(--mut);font-size:12px;text-align:center;margin-top:26px}
   <div class="g">實戰</div>
   <a href="#bugs">⑦ 除錯紀錄（9 個雷）</a>
   <a href="#verify">⑧ 驗證方法</a>
-  <a href="#result">⑨ 成果與交付</a>
+  <a href="#ons">⑨ Onshape 與發佈</a>
+  <a href="#result">⑩ 成果與交付</a>
 </nav>
 <main>
 <div class="kick">LIVING-TECH FILMS · MAKING-OF</div>
@@ -154,18 +155,34 @@ colorbalance=rs=0.04:bs=-0.05:rh=0.05:bh=-0.04,noise=alls=9:allf=t,vignette</pre
 <p>每支成片都做：<code>ffprobe</code> 確認時長/編碼/音軌存在，再用 <code>ffmpeg -ss</code> 抽多張關鍵時刻靜格<b>實際看過</b>（字卡是否顯示、臉是否匿名、調色是否到位）。本頁的除錯紀錄全部來自這個「抽格→看→修」的迴圈。</p>
 </section>
 
-<section id="result"><h2><span class="n">9</span>成果與交付</h2>
+<section id="ons"><h2><span class="n">9</span>Onshape 三支與發佈上線</h2>
+<p>第二批素材是 <b>2019 Onshape CAD 研習實錄</b>（26 段、約 21GB）——<b>趙珩宇老師本人入鏡</b>講解與操作 Onshape，<b>畫面中無學生</b>。因此這批<b>不需要 deface</b>（主角是本人、同意入鏡），剪成三支：</p>
+<table><thead><tr><th>片</th><th>做法</th></tr></thead><tbody>
+<tr><td><b>教師特色宣傳片</b> 0:35</td><td>22 個動態短鏡（講解手勢 ↔ CAD B-roll ↔ 完成作品）快接 ＋ 開場品牌卡 / tagline 下三分標 / 聯絡卡 ＋ <code>Inspired</code> 配樂</td></tr>
+<tr><td><b>建模 Speed-run</b> 0:55</td><td><code>setpts=PTS/8</code> 把 CAD 螢幕加速 ＋ 步驟字幕（草圖→3D→列印）＋ <code>Itty Bitty 8 Bit</code></td></tr>
+<tr><td><b>精華導覽（章節）</b> 0:44</td><td>四章主題卡 ＋ 各章 2× 加速段落 ＋ <code>Inspired</code></td></tr>
+</tbody></table>
+<h3>發佈上線（GitHub Pages）</h3>
+<p>全部成片（5 片 ＋ 快切 ＋ Onshape 3 支）以 <code>&lt;video&gt;</code> 嵌入 <code>storyboard.html</code> 的「看片」區，發佈到公開 repo <b>henrychao521/livingtech-films</b> → <b>henrychao521.github.io/livingtech-films/</b>，並接進主站導覽。</p>
+<div class="callout warn"><b>第二批新踩雷</b>　⑩ 字卡用「・」(U+30FB) STHeiti 無此字形 → 顯示方塊，改用「·」(U+00B7)；英文 kicker 誤把中文放進 Futura(無 CJK) → 改純英文。　⑪ 多個 ffmpeg 同時跑 → CPU 互搶造成合成「假卡死」，改前景單跑即 ~20 秒完成。　⑫ 改公開站前本機 clone 已落後遠端多個提交 → 務必先 <code>git fetch</code>+同步再改再推。</div>
+</section>
+
+<section id="result"><h2><span class="n">10</span>成果與交付</h2>
 <table><thead><tr><th>片</th><th>標題</th><th>長度</th><th>狀態</th></tr></thead><tbody>
 <tr><td>A</td><td>一格之內，一個學期（縮時交響曲）</td><td>0:56</td><td>✅ 已驗證</td></tr>
 <tr><td>C</td><td>那年秋天，我們做了一個東西（A24 懷舊）</td><td>0:35</td><td>✅ 已驗證</td></tr>
 <tr><td>E</td><td>受試者編號 4471（監視器科幻）</td><td>0:32</td><td>✅ 已驗證</td></tr>
 <tr><td>B</td><td>林海工藝研究所（魏斯安德森）</td><td>0:42</td><td>✅ 已驗證</td></tr>
 <tr><td>D</td><td>生科教室觀察日記（偽紀錄喜劇）</td><td>0:32</td><td>✅ 已驗證</td></tr>
+<tr><td>SZ</td><td>快切混剪（跨五風格高速硬切）</td><td>0:51</td><td>✅ 已驗證</td></tr>
+<tr><td>—</td><td>Onshape · 教師特色宣傳片</td><td>0:35</td><td>✅ 已驗證</td></tr>
+<tr><td>—</td><td>Onshape · 建模 Speed-run</td><td>0:55</td><td>✅ 已驗證</td></tr>
+<tr><td>—</td><td>Onshape · 精華導覽（章節）</td><td>0:44</td><td>✅ 已驗證</td></tr>
 </tbody></table>
 <div class="callout tip"><b>檔案位置</b>　成片在 <code>/Volumes/128G/livingtech-films/renders/</code>；本頁與 <code>storyboard.html</code> 在 <code>livingtech-films/</code> 根目錄；可重用工具與中間檔在 <code>work/</code>。所有 MP4 皆 1080p / H.264 / AAC，可直接播放或再匯入 Palmier 微調。</div>
 <div class="callout ok"><b>音樂</b>　皆 Kevin MacLeod（CC BY 4.0），五支不重複、片尾均標註。</div>
 </section>
-<footer>生活科技教室・五片實作脈絡　·　ffmpeg 全自動剪輯　·　2026-06-21　·　Claude</footer>
+<footer>生活科技影片實作脈絡　·　5 片 ＋ 快切 ＋ Onshape 3 支　·　ffmpeg 全自動剪輯　·　2026-06-21　·　Claude</footer>
 </main>
 </div>
 </body>
